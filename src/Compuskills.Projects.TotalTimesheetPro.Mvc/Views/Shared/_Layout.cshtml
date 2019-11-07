@@ -6,32 +6,27 @@
     <title>@ViewBag.Title - TotalTimesheet Pro</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
+    
 
 </head>
 <body>
-    <div class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                @Html.ActionLink("TotalTimesheet Pro", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
-            </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                </ul>
-                @Html.Partial("_LoginPartial")
-            </div>
-        </div>
-    </div>
     <div class="container body-content">
-        @RenderBody()
+        <div class="row">
+            <div class="col-lg-6 col-md-6 col-sm-6"><img src="@Url.Content("~/Content/img/compuskills-logo.png")" alt="Image" style="margin-left:10px;" /></div>
+            <div class="col-lg-6 col-md-6 col-sm-6" style="text-align:right;"><img style="width:375px;" src="@Url.Content("~/Content/img/Ttp-Logo.png")" alt="Image" style="margin-left:10px;" /></div>
+        </div>
+        <div style="border:4px solid black; margin:10px; padding:35px;">
+            @RenderBody()
+        </div>
+
+        @Html.ActionLink("Enter Time", "EnterTime", "Home") |
+        @Html.ActionLink("Manage Clients", "ManageClients", "Home") |
+        @Html.ActionLink("Manage Project", "ManageProjects", "Home") |
+        @Html.ActionLink("Hours Report", "HoursReport", "Home") |
+        @Html.ActionLink("Billing Report", "BillingReport", "Home")
         <hr />
         <footer>
-            <p>&copy; @DateTime.Now.Year - TotalTimesheet Pro</p>
+            <p>&copy; @DateTime.Now.Year - (Elia Sternbuch) Total Timesheet Pro</p>
         </footer>
     </div>
 
