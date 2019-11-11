@@ -13,17 +13,28 @@
     <div class="container body-content">
         <div class="row">
             <div class="col-lg-6 col-md-6 col-sm-6"><img src="@Url.Content("~/Content/img/compuskills-logo.png")" alt="Image" style="margin-left:10px;" /></div>
-            <div class="col-lg-6 col-md-6 col-sm-6" style="text-align:right;"><img style="width:375px;" src="@Url.Content("~/Content/img/Ttp-Logo.png")" alt="Image" style="margin-left:10px;" /></div>
+            <div class="col-lg-6 col-md-6 col-sm-6" style="text-align:right;"><img style="width:375px;margin-left:10px;" src="@Url.Content("~/Content/img/Ttp-Logo.png")" alt="Image" /></div>
         </div>
+        @if (User.Identity.IsAuthenticated)
+        {
+            using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm"}))
+            {
+                @Html.AntiForgeryToken()
+
+                <p style="text-align:right;">Logged in as @User.Identity.Name <a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></p>
+            }
+    
+        }
         <div style="border:4px solid black; margin:10px; padding:35px;">
             @RenderBody()
         </div>
-
-        @Html.ActionLink("Enter Time", "EnterTime", "Home") |
-        @Html.ActionLink("Manage Clients", "ManageClients", "Home") |
-        @Html.ActionLink("Manage Project", "ManageProjects", "Home") |
-        @Html.ActionLink("Hours Report", "HoursReport", "Home") |
-        @Html.ActionLink("Billing Report", "BillingReport", "Home")
+        <div style="text-align: right;">
+            @Html.ActionLink("Enter Time", "Index", "EnterTime") |
+            @Html.ActionLink("Manage Clients", "Index", "ManageClients") |
+            @Html.ActionLink("Manage Project", "Index", "ManageProjects") |
+            @Html.ActionLink("Hours Report", "HoursReport", "Home") |
+            @Html.ActionLink("Billing Report", "BillingReport", "Home")
+        </div>
         <hr />
         <footer>
             <p>&copy; @DateTime.Now.Year - (Elia Sternbuch) Total Timesheet Pro</p>

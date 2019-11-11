@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNet.Identity;
+﻿using Compuskills.Projects.TotalTimesheetPro.Domain.DataSource;
+using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,8 @@ namespace Compuskills.Projects.TotalTimesheetPro.Mvc.Controllers
     [Authorize]
     public class HomeController : Controller
     {
+        private TotalTimesheetProContext db = new TotalTimesheetProContext();
+
         [AllowAnonymous]
         public ActionResult Index()
         {
@@ -23,18 +26,7 @@ namespace Compuskills.Projects.TotalTimesheetPro.Mvc.Controllers
             }
          
         }
-        public ActionResult EnterTime()
-        {
-            return View();
-        }
-        public ActionResult ManageClients()
-        {
-            return View();
-        }
-        public ActionResult ManageProjects()
-        {
-            return View();
-        }
+
         public ActionResult HoursReport()
         {
             return View();
@@ -42,6 +34,14 @@ namespace Compuskills.Projects.TotalTimesheetPro.Mvc.Controllers
         public ActionResult BillingReport()
         {
             return View();
+        }
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                db.Dispose();
+            }
+            base.Dispose(disposing);
         }
     }
     

@@ -14,5 +14,7 @@ namespace Compuskills.Projects.TotalTimesheetPro.Domain.DataSource
         {
             return new TotalTimesheetProContext();
         }
+
+        public System.Data.Entity.DbSet<Compuskills.Projects.TotalTimesheetPro.Domain.Models.TtpUser> IdentityUsers { get; set; }
     }
 }
