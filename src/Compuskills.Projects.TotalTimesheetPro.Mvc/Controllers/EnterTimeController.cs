@@ -12,6 +12,7 @@ using Microsoft.AspNet.Identity;
 
 namespace Compuskills.Projects.TotalTimesheetPro.Mvc.Controllers
 {
+    [Authorize]
     public class EnterTimeController : Controller
     {
         private TotalTimesheetProContext db = new TotalTimesheetProContext();
