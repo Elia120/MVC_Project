@@ -28,13 +28,37 @@ namespace Compuskills.Projects.TotalTimesheetPro.Mvc.Controllers
         }
 
         
-
+        public ActionResult _Index(string datestring)
+        {
+            DateTime? date= DateTime.Today;
+            if (datestring!=null)
+            {
+                date = DateTime.Parse(datestring);
+            }
+            date = date.Value.Date;
+            var enddate = date.Value.AddDays(1.0);
+            var temp = User.Identity.GetUserId();
+            var timesheetEntries = db.TimesheetEntries.Where(x => x.TtpUserId == temp).Where(x=>x.StartTime>=date && x.StartTime<enddate).Include(x => x.Project).Include(x => x.Project.Client).AsEnumerable();
+            return PartialView(timesheetEntries);         
+            
+        }
         // GET: EnterTime/Create
         public ActionResult Create()
         {
             ViewBag.ProjectID = new SelectList(db.Projects, "ProjectID", "ProjectName");
-            ViewBag.TtpUserId = new SelectList(db.Users, "Id", "Email");
-            return View();
+            ViewBag.ClientId = new SelectList(db.Clients, "ClientID", "Name");
+
+            var temp = User.Identity.GetUserId();
+            var LastEntree = db.TimesheetEntries.Where(x => x.TtpUserId == temp).OrderByDescending(x => x.StartTime).FirstOrDefault();
+            if (LastEntree.EndTime==null)
+            {
+                ViewBag.Btn = "Stop";
+            }
+            else
+            {
+                ViewBag.Btn = "Start";
+            }
+            return PartialView();
         }
 
         // POST: EnterTime/Create
@@ -44,16 +68,42 @@ namespace Compuskills.Projects.TotalTimesheetPro.Mvc.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "TimesheetEntryID,TtpUserId,ProjectID,StartTime,EndTime")] TimesheetEntry timesheetEntry)
         {
-            if (ModelState.IsValid)
+            var temp = User.Identity.GetUserId();
+            var LastEntree = db.TimesheetEntries.Where(x => x.TtpUserId == temp).OrderByDescending(x => x.StartTime).FirstOrDefault();
+            if (LastEntree.EndTime==null)
             {
-                db.TimesheetEntries.Add(timesheetEntry);
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                LastEntree.EndTime = DateTime.Now;
+                if (ModelState.IsValid)
+                {
+                    db.Entry(LastEntree).State = EntityState.Modified;
+                    db.SaveChanges();
+                }
+            }
+            else
+            {
+                timesheetEntry.StartTime = DateTime.Now;
+                timesheetEntry.EndTime = null;
+                timesheetEntry.TtpUserId=temp;
+                if (ModelState.IsValid)
+                {
+                    db.TimesheetEntries.Add(timesheetEntry);
+                    db.SaveChanges();
+                }
             }
 
-            ViewBag.ProjectID = new SelectList(db.Projects, "ProjectID", "ProjectName", timesheetEntry.ProjectID);
-            ViewBag.TtpUserId = new SelectList(db.Users, "Id", "Email", timesheetEntry.TtpUserId);
-            return View(timesheetEntry);
+
+            LastEntree = db.TimesheetEntries.Where(x => x.TtpUserId == temp).OrderByDescending(x => x.StartTime).FirstOrDefault();
+            ViewBag.ProjectID = new SelectList(db.Projects, "ProjectID", "ProjectName");
+            ViewBag.ClientId = new SelectList(db.Clients, "ClientID", "Name");
+            if (LastEntree.EndTime == null)
+            {
+                ViewBag.Btn = "Stop";
+            }
+            else
+            {
+                ViewBag.Btn = "Start";
+            }
+            return PartialView(timesheetEntry);
         }
 
         // GET: EnterTime/Edit/5

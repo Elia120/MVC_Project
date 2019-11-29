@@ -3,53 +3,51 @@
 @{
     ViewBag.Title = "Index";
 }
+@section Scripts{
+    @Scripts.Render("~/bundles/jqueryunobtrusive")
+    @Scripts.Render("~/bundles/jquery")
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script>
+        $(document).ready(function () {
+            //datepicker
+           
+                $("#datepicker").datepicker({
+                    changeMonth: true,
+                    changeYear: true,
+                    onSelect: function () {
+                        var d = $(this).datepicker('getDate');
+                        var dateObject={
+                            datestring: d.toISOString(),
+                        }
+                        $.ajax({
+                            cache: false,
+                            type: "POST",
+                            async: false,
+                            url: "/EnterTime/_Index",
+                            data: dateObject,
+                            success: function (data) {
+                                $("#table").html(data);
 
-    <h2>Date @DateTime.Today.Day.@DateTime.Today.Month.@DateTime.Today.Year</h2>
 
+                            },
+                            error: function (xhr) {
+                                alert("Error");
+                                alert(xhr.responseText);
+                            }
+                        });
+                    }
+                });
+            $("#datepicker").datepicker().datepicker("setDate", new Date());
+    </script>
+}
 <div class="row">
-    <div class="col-lg-8 col-md-8 col-sm-8">
-        <table class="table">
-            <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.StartTime)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.EndTime)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Project.ProjectName)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Project.Client.Name)
-                </th>
-
-                <th></th>
-            </tr>
-
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.StartTime)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.EndTime)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Project.ProjectName)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Project.Client.Name)
-                    </td>
-                    <td>
-                        @Html.ActionLink("Edit", "Edit", new { id = item.TimesheetEntryID }) |
-                        @Html.ActionLink("Delete", "Delete", new { id = item.TimesheetEntryID })
-                    </td>
-                </tr>
-            }
-        </table>
+    <div  class="col-lg-8 col-md-8 col-sm-8">
+        <h2>Date: <input type="text" id="datepicker"></h2>
+        <div id="table">
+            @Html.Action("_Index")
+        </div>
     </div>
     <div class="col-lg-4 col-md-4 col-sm-4">
-        @Html.RenderAction("Create")
+        @Html.Action("Create")
     </div>
 </div>

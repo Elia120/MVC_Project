@@ -1,0 +1,45 @@
+﻿@model IEnumerable<Compuskills.Projects.TotalTimesheetPro.Domain.Models.TimesheetEntry>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.StartTime)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.EndTime)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Project.ProjectName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Project.Client)
+        </th>
+
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.StartTime)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EndTime)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Project.ProjectName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Project.Client.Name)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.TimesheetEntryID }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.TimesheetEntryID })
+            </td>
+        </tr>
+    }
+</table>
