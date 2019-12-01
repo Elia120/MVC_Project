@@ -20,37 +20,42 @@ namespace Compuskills.Projects.TotalTimesheetPro.Mvc.Controllers
         // GET: EnterTime
         public ActionResult Index()
         {
-            var temp= User.Identity.GetUserId();
-            var timesheetEntries = db.TimesheetEntries.Where(x=> x.TtpUserId==temp).Include(t => t.Project).Include(t => t.TtpUser);
+            var temp = User.Identity.GetUserId();
+            var timesheetEntries = db.TimesheetEntries.Where(x => x.TtpUserId == temp).Include(t => t.Project).Include(t => t.TtpUser);
             ViewBag.ProjectID = new SelectList(db.Projects, "ProjectID", "ProjectName");
             ViewBag.ClientID = new SelectList(db.Clients, "ClientID", "Name");
             return View(timesheetEntries.ToList());
         }
 
-        
+
         public ActionResult _Index(string datestring)
         {
-            DateTime? date= DateTime.Today;
-            if (datestring!=null)
+            DateTime? date = DateTime.Today;
+            if (datestring != null)
             {
                 date = DateTime.Parse(datestring);
             }
             date = date.Value.Date;
             var enddate = date.Value.AddDays(1.0);
             var temp = User.Identity.GetUserId();
-            var timesheetEntries = db.TimesheetEntries.Where(x => x.TtpUserId == temp).Where(x=>x.StartTime>=date && x.StartTime<enddate).Include(x => x.Project).Include(x => x.Project.Client).AsEnumerable();
-            return PartialView(timesheetEntries);         
-            
+            var timesheetEntries = db.TimesheetEntries.Where(x => x.TtpUserId == temp).Where(x => x.StartTime >= date && x.StartTime < enddate).Include(x => x.Project).Include(x => x.Project.Client).AsEnumerable();
+            return PartialView(timesheetEntries);
+
         }
         // GET: EnterTime/Create
         public ActionResult Create()
         {
             ViewBag.ProjectID = new SelectList(db.Projects, "ProjectID", "ProjectName");
-            ViewBag.ClientId = new SelectList(db.Clients, "ClientID", "Name");
+            ViewBag.ClientID = new SelectList(db.Clients, "ClientID", "Name");
 
             var temp = User.Identity.GetUserId();
             var LastEntree = db.TimesheetEntries.Where(x => x.TtpUserId == temp).OrderByDescending(x => x.StartTime).FirstOrDefault();
-            if (LastEntree.EndTime==null)
+            if (LastEntree == null)
+            {
+                ViewBag.Btn = "Start";
+                return PartialView();
+            }
+            if (LastEntree.EndTime == null)
             {
                 ViewBag.Btn = "Stop";
             }
@@ -65,36 +70,35 @@ namespace Compuskills.Projects.TotalTimesheetPro.Mvc.Controllers
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "TimesheetEntryID,TtpUserId,ProjectID,StartTime,EndTime")] TimesheetEntry timesheetEntry)
+        public ActionResult Create(int? Client, int? Project)
         {
+            if (!Client.HasValue || !Project.HasValue)
+            {
+                return PartialView();
+            }
             var temp = User.Identity.GetUserId();
             var LastEntree = db.TimesheetEntries.Where(x => x.TtpUserId == temp).OrderByDescending(x => x.StartTime).FirstOrDefault();
-            if (LastEntree.EndTime==null)
+            if (LastEntree == null)
             {
-                LastEntree.EndTime = DateTime.Now;
-                if (ModelState.IsValid)
-                {
-                    db.Entry(LastEntree).State = EntityState.Modified;
-                    db.SaveChanges();
-                }
+                CreateNewTse(Project.Value, Client.Value, temp);
             }
             else
             {
-                timesheetEntry.StartTime = DateTime.Now;
-                timesheetEntry.EndTime = null;
-                timesheetEntry.TtpUserId=temp;
-                if (ModelState.IsValid)
+                if (LastEntree.EndTime == null)
                 {
-                    db.TimesheetEntries.Add(timesheetEntry);
+                    LastEntree.EndTime = DateTime.Now;
+                    db.Entry(LastEntree).State = EntityState.Modified;
                     db.SaveChanges();
+                }
+                else
+                {
+                    CreateNewTse(Project.Value, Client.Value, temp);
                 }
             }
 
-
             LastEntree = db.TimesheetEntries.Where(x => x.TtpUserId == temp).OrderByDescending(x => x.StartTime).FirstOrDefault();
             ViewBag.ProjectID = new SelectList(db.Projects, "ProjectID", "ProjectName");
-            ViewBag.ClientId = new SelectList(db.Clients, "ClientID", "Name");
+            ViewBag.ClientID = new SelectList(db.Clients, "ClientID", "Name");
             if (LastEntree.EndTime == null)
             {
                 ViewBag.Btn = "Stop";
@@ -103,7 +107,7 @@ namespace Compuskills.Projects.TotalTimesheetPro.Mvc.Controllers
             {
                 ViewBag.Btn = "Start";
             }
-            return PartialView(timesheetEntry);
+            return PartialView(LastEntree);
         }
 
         // GET: EnterTime/Edit/5
@@ -137,7 +141,7 @@ namespace Compuskills.Projects.TotalTimesheetPro.Mvc.Controllers
                 return RedirectToAction("Index");
             }
             ViewBag.ProjectID = new SelectList(db.Projects, "ProjectID", "ProjectName", timesheetEntry.ProjectID);
-            ViewBag.TtpUserId = new SelectList(db.Users, "Id", "Email", timesheetEntry.TtpUserId);
+            ViewBag.TtpUserID = new SelectList(db.Users, "Id", "Email", timesheetEntry.TtpUserId);
             return View(timesheetEntry);
         }
 
@@ -166,7 +170,24 @@ namespace Compuskills.Projects.TotalTimesheetPro.Mvc.Controllers
             db.SaveChanges();
             return RedirectToAction("Index");
         }
+        public void CreateNewTse(int ProjectID, int ClientID, string UserID)
+        {
+            var Project = db.Projects.Find(ProjectID);
+            if (Project.ClientID != ClientID)
+            {
+                return;
+            }
+            var Tse = new TimesheetEntry
+            {
+                StartTime = DateTime.Now,
+                EndTime = null,
+                ProjectID = ProjectID,
+                TtpUserId = UserID
+            };
 
+            db.TimesheetEntries.Add(Tse);
+            db.SaveChanges();
+        }
         protected override void Dispose(bool disposing)
         {
             if (disposing)
