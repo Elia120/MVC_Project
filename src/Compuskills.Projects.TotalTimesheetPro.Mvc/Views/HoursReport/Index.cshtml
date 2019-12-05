@@ -1,0 +1,69 @@
+﻿
+@{
+    ViewBag.Title = "Hours Reports";
+}
+
+<h2>Hours Reports</h2>
+<br />  
+<div class="row">
+    <div class="control-group col-md-3">
+        <label class="control-label">From:</label>
+        <input id="StartDate" style="margin-left: 10px;" size="16" type="text" />
+    </div>
+    <div class="control-group col-md-3">
+        <label class="control-label">To:</label>
+        <input id="EndDate" style="margin-left: 10px;" size="16" type="text" />
+    </div>
+</div>
+<br />
+    <div class="control-group">
+        <input type="submit" value="Start" class="btn btn-success btnJquery" />
+    </div>
+<hr />
+<div id="table"></div>
+
+@section Scripts{
+    @Scripts.Render("~/bundles/jquery")
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#StartDate").datepicker({
+                changeMonth: true,
+                changeYear: true,
+                onSelect: function (selected) {
+                    $("#EndDate").datepicker("option", "minDate", selected)
+                }
+            });
+            $("#EndDate").datepicker({
+                changeMonth: true,
+                changeYear: true,
+                onSelect: function (selected) {
+                    $("#StartDate").datepicker("option", "maxDate", selected)
+                }
+            });
+            $(".btnJquery").click(function () {
+                var StartDate = $("#StartDate").datepicker('getDate');
+                var EndDate = $("#EndDate").datepicker('getDate');
+                var DateObject = {
+                    StartDateString: StartDate.toISOString(),
+                    EndDateString: EndDate.toISOString()
+                }
+                $.ajax({
+                    cache: false,
+                    type: "POST",
+                    async: false,
+                    url: "/HoursReport/GetHours",
+                    data: DateObject,
+                    success: function (data) {
+                        $("#table").html(data);
+                    },
+                    error: function (xhr) {
+                        alert("Error");
+                        alert(xhr.responseText);
+                    }
+                });
+            });
+        });
+    </script>
+
+}

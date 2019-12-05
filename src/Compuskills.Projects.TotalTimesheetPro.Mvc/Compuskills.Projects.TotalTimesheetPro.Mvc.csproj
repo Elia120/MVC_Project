@@ -169,6 +169,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\EnterTimeController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\HoursReportController.cs" />
     <Compile Include="Controllers\ManageClientsController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\ManageProjectsController.cs" />
@@ -179,6 +180,7 @@
     <Compile Include="Identity\TtpSignInManager.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\HomeViewModels.cs" />
+    <Compile Include="Models\HoursReportViewModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
@@ -251,6 +253,8 @@
     <Content Include="Views\EnterTime\Index.cshtml" />
     <Content Include="Views\EnterTime\Create.cshtml" />
     <Content Include="Views\EnterTime\_Index.cshtml" />
+    <Content Include="Views\HoursReport\GetHours.cshtml" />
+    <Content Include="Views\HoursReport\Index.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

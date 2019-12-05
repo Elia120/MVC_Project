@@ -1,0 +1,23 @@
+﻿@model Compuskills.Projects.TotalTimesheetPro.Mvc.Models.HoursReportGetHoursViewModels
+@{
+    ViewBag.Title = "Hours Report";
+}
+<div>
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Hours)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Hours)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DaysWorked)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DaysWorked)
+        </dd>
+    </dl>
+</div>
