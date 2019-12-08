@@ -21,7 +21,7 @@ namespace Compuskills.Projects.TotalTimesheetPro.Mvc.Controllers
         public ActionResult Index()
         {
             var temp = User.Identity.GetUserId();
-            var timesheetEntries = db.TimesheetEntries.Where(x => x.TtpUserId == temp).Include(t => t.Project).Include(t => t.TtpUser);
+            var timesheetEntries = db.TimesheetEntries.Where(x => x.Project.Client.TtpUserId == temp).Include(t => t.Project).Include(t => t.Project.Client);
             ViewBag.ProjectID = new SelectList(db.Projects, "ProjectID", "ProjectName");
             ViewBag.ClientID = new SelectList(db.Clients, "ClientID", "Name");
             return View(timesheetEntries.ToList());
@@ -38,7 +38,7 @@ namespace Compuskills.Projects.TotalTimesheetPro.Mvc.Controllers
             date = date.Value.Date;
             var enddate = date.Value.AddDays(1.0);
             var temp = User.Identity.GetUserId();
-            var timesheetEntries = db.TimesheetEntries.Where(x => x.TtpUserId == temp).Where(x => x.StartTime >= date && x.StartTime < enddate).Include(x => x.Project).Include(x => x.Project.Client).AsEnumerable();
+            var timesheetEntries = db.TimesheetEntries.Where(x => x.Project.Client.TtpUserId == temp).Where(x => x.StartTime >= date && x.StartTime < enddate).Include(x => x.Project).Include(x => x.Project.Client).AsEnumerable();
             return PartialView(timesheetEntries);
 
         }
@@ -49,7 +49,7 @@ namespace Compuskills.Projects.TotalTimesheetPro.Mvc.Controllers
             ViewBag.ClientID = new SelectList(db.Clients, "ClientID", "Name");
 
             var temp = User.Identity.GetUserId();
-            var LastEntree = db.TimesheetEntries.Where(x => x.TtpUserId == temp).OrderByDescending(x => x.StartTime).FirstOrDefault();
+            var LastEntree = db.TimesheetEntries.Where(x => x.Project.Client.TtpUserId== temp).OrderByDescending(x => x.StartTime).FirstOrDefault();
             if (LastEntree == null)
             {
                 ViewBag.Btn = "Start";
@@ -77,7 +77,7 @@ namespace Compuskills.Projects.TotalTimesheetPro.Mvc.Controllers
                 return PartialView();
             }
             var temp = User.Identity.GetUserId();
-            var LastEntree = db.TimesheetEntries.Where(x => x.TtpUserId == temp).OrderByDescending(x => x.StartTime).FirstOrDefault();
+            var LastEntree = db.TimesheetEntries.Where(x => x.Project.Client.TtpUserId == temp).OrderByDescending(x => x.StartTime).FirstOrDefault();
             if (LastEntree == null)
             {
                 CreateNewTse(Project.Value, Client.Value, temp);
@@ -96,7 +96,7 @@ namespace Compuskills.Projects.TotalTimesheetPro.Mvc.Controllers
                 }
             }
 
-            LastEntree = db.TimesheetEntries.Where(x => x.TtpUserId == temp).OrderByDescending(x => x.StartTime).FirstOrDefault();
+            LastEntree = db.TimesheetEntries.Where(x => x.Project.Client.TtpUserId == temp).OrderByDescending(x => x.StartTime).FirstOrDefault();
             ViewBag.ProjectID = new SelectList(db.Projects, "ProjectID", "ProjectName");
             ViewBag.ClientID = new SelectList(db.Clients, "ClientID", "Name");
             if (LastEntree.EndTime == null)
@@ -123,7 +123,7 @@ namespace Compuskills.Projects.TotalTimesheetPro.Mvc.Controllers
                 return HttpNotFound();
             }
             ViewBag.ProjectID = new SelectList(db.Projects, "ProjectID", "ProjectName", timesheetEntry.ProjectID);
-            ViewBag.TtpUserId = new SelectList(db.Users, "Id", "Email", timesheetEntry.TtpUserId);
+            ViewBag.ClientID = new SelectList(db.Clients, "ClientID", "Name",timesheetEntry.Project.ClientID);
             return View(timesheetEntry);
         }
 
@@ -141,7 +141,7 @@ namespace Compuskills.Projects.TotalTimesheetPro.Mvc.Controllers
                 return RedirectToAction("Index");
             }
             ViewBag.ProjectID = new SelectList(db.Projects, "ProjectID", "ProjectName", timesheetEntry.ProjectID);
-            ViewBag.TtpUserID = new SelectList(db.Users, "Id", "Email", timesheetEntry.TtpUserId);
+            ViewBag.ClientID = new SelectList(db.Clients, "ClientID", "Name", timesheetEntry.Project.ClientID);
             return View(timesheetEntry);
         }
 
@@ -181,8 +181,7 @@ namespace Compuskills.Projects.TotalTimesheetPro.Mvc.Controllers
             {
                 StartTime = DateTime.Now,
                 EndTime = null,
-                ProjectID = ProjectID,
-                TtpUserId = UserID
+                ProjectID = ProjectID
             };
 
             db.TimesheetEntries.Add(Tse);

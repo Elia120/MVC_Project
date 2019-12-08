@@ -167,6 +167,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\BillingReportController.cs" />
     <Compile Include="Controllers\EnterTimeController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\HoursReportController.cs" />
@@ -179,6 +180,7 @@
     <Compile Include="Identity\IdentityExtensions.cs" />
     <Compile Include="Identity\TtpSignInManager.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\BillingReportViewModel.cs" />
     <Compile Include="Models\HomeViewModels.cs" />
     <Compile Include="Models\HoursReportViewModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
@@ -255,6 +257,8 @@
     <Content Include="Views\EnterTime\_Index.cshtml" />
     <Content Include="Views\HoursReport\GetHours.cshtml" />
     <Content Include="Views\HoursReport\Index.cshtml" />
+    <Content Include="Views\BillingReport\GetReport.cshtml" />
+    <Content Include="Views\BillingReport\Index.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

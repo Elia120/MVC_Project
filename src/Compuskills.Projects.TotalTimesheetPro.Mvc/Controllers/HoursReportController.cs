@@ -25,7 +25,7 @@ namespace Compuskills.Projects.TotalTimesheetPro.Mvc.Controllers
             if (DateTime.TryParse(StartDateString,out StartDate) && DateTime.TryParse(EndDateString, out EndDate))
             {
                 var temp = User.Identity.GetUserId();
-                var Tse = db.TimesheetEntries.Where(x=> x.TtpUserId==temp).Where(x => x.StartTime > StartDate && x.StartTime < EndDate);
+                var Tse = db.TimesheetEntries.Where(x=> x.Project.Client.TtpUserId==temp).Where(x => x.StartTime > StartDate && x.StartTime < EndDate);
                 TimeSpan? HoursWorked = new TimeSpan(0, 0, 0, 0, 0);
                 DateTime ForeachDate =StartDate;
                 int DaysWorked = 0;

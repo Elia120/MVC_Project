@@ -18,7 +18,7 @@
             @Html.LabelFor(model => model.Project.ClientID, "Client", htmlAttributes: new { @class = "control-label col-md-3" })
             <div class="col-md-8">
                 @Html.DropDownList("ClientID", null, htmlAttributes: new { @class = "form-control" ,@id = "ClientIDDrop"})
-                @Html.ValidationMessageFor(model => model.TtpUserId, "", new { @class = "text-danger" })
+                @Html.ValidationMessageFor(model => model.Project.ClientID, "", new { @class = "text-danger" })
             </div>
         </div>
 
