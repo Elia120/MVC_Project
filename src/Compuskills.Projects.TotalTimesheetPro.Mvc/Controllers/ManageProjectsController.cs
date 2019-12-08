@@ -65,8 +65,8 @@ namespace Compuskills.Projects.TotalTimesheetPro.Mvc.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-
-            ViewBag.ClientID = new SelectList(db.Clients, "ClientID", "Name", project.ClientID);
+            var temp = User.Identity.GetUserId();
+            ViewBag.ClientID = new SelectList(db.Clients.Where(x => x.TtpUserId == temp), "ClientID", "Name", project.ClientID);
             return View(project);
         }
 

@@ -20,9 +20,8 @@ namespace Compuskills.Projects.TotalTimesheetPro.Mvc.Controllers
         // GET: ManageClients
         public ActionResult Index()
         {
-            var currentUserId = User.Identity.GetUserId();
-            var user = db.Users.FirstOrDefault(x => x.Id == currentUserId);
-            var clients = db.Clients.Where(x => x.TtpUserId == user.Id);
+            var temp = User.Identity.GetUserId();
+            var clients = db.Clients.Where(x => x.TtpUserId == temp);
             return View(clients.ToList());
         }
 

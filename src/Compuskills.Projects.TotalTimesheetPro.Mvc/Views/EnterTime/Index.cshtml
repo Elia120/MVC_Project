@@ -10,7 +10,28 @@
     <script>
         $(document).ready(function () {
             //datepicker
+            var ButtenDisable = function () {
+                $.ajax({
+                            cache: false,
+                            type: "GET",
+                            async: false,
+                            url: "/EnterTime/GetStartOrStop",
+                    success: function (data) {
+                                $(".btnStart").attr("disabled", true);
+                                if (data==true) {
+                                    $("#btnStart").attr("disabled", false);
+                                } else {
+                                     $("#btnStop").attr("disabled", false);
+                                }
 
+
+                            },
+                            error: function (xhr) {
+                                alert("Error");
+                                alert(xhr.responseText);
+                            }
+                        });
+            }
             $("#datepicker").datepicker({
                 changeMonth: true,
                 changeYear: true,
@@ -39,6 +60,7 @@
                 }
             });
             $("#datepicker").datepicker().datepicker("setDate", new Date());
+            ButtenDisable();
 
             $(".btnStart").click(function (e) {
                 e.preventDefault();
@@ -76,6 +98,7 @@
                                     alert(xhr.responseText);
                                     }
                                 });
+                            ButtenDisable();
                             },
                         error: function (xhr) {
                             alert("Error");
@@ -100,10 +123,10 @@
         </div>
         <div class="row">
             <div class="col-md-offset-3 col-md-2">
-                <input  type="submit"  value="Start" class="btn btn-success btnStart" />
+                <input id="btnStart" type="submit"  value="Start" class="btn btn-success btnStart" />
             </div>
             <div class="col-md-offset-2 col-md-2">
-                <input id="BtnCreate" type="submit" value="Stop" class="btn btn-danger btnStart" />
+                <input id="btnStop" type="submit" value="Stop" class="btn btn-danger btnStart" />
             </div>
         </div>
     </div>
