@@ -13,6 +13,8 @@ using Microsoft.AspNet.Identity;
 
 namespace Compuskills.Projects.TotalTimesheetPro.Mvc.Controllers
 {
+    [Authorize]
+
     public class BillingReportController : Controller
     {
         private TotalTimesheetProContext db = new TotalTimesheetProContext();

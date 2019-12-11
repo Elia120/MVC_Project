@@ -51,6 +51,13 @@ namespace Compuskills.Projects.TotalTimesheetPro.Mvc.Controllers
             var LastEntree = db.TimesheetEntries.Where(x => x.Project.Client.TtpUserId== temp).OrderByDescending(x => x.StartTime).FirstOrDefault();
            return PartialView();
         }
+        public ActionResult CreateNew()
+        {
+            var temp = User.Identity.GetUserId();
+            ViewBag.ProjectID = new SelectList(db.Projects.Where(x => x.IsActive && x.Client.TtpUserId == temp), "ProjectID", "ProjectName");
+            ViewBag.ClientID = new SelectList(db.Clients.Where(x => x.TtpUserId == temp), "ClientID", "Name");
+            return View();
+        }
         public JsonResult GetStartOrStop()
         {
             var temp = User.Identity.GetUserId();

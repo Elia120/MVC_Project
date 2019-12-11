@@ -9,6 +9,8 @@ using System.Web.Mvc;
 
 namespace Compuskills.Projects.TotalTimesheetPro.Mvc.Controllers
 {
+    [Authorize]
+
     public class HoursReportController : Controller
     {
         private TotalTimesheetProContext db = new TotalTimesheetProContext();

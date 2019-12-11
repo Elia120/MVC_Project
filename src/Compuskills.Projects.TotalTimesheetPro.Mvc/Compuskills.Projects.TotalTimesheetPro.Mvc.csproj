@@ -259,6 +259,7 @@
     <Content Include="Views\HoursReport\Index.cshtml" />
     <Content Include="Views\BillingReport\GetReport.cshtml" />
     <Content Include="Views\BillingReport\Index.cshtml" />
+    <Content Include="Views\EnterTime\CreateNew.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
