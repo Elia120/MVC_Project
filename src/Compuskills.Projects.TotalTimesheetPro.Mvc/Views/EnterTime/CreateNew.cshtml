@@ -1,7 +1,7 @@
 ﻿@model Compuskills.Projects.TotalTimesheetPro.Domain.Models.TimesheetEntry
 
 @{
-    ViewBag.Title = "Create";
+    ViewBag.Title = "Add Timesheet Entree";
 }
 @section Scripts{
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
@@ -14,14 +14,13 @@
     </script>
 
 }
-<h2>Create</h2>
+<h2>Add worked Time</h2>
 
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
 
     <div class="form-horizontal">
-        <h4>Timesheet Entry</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <div class="form-group">

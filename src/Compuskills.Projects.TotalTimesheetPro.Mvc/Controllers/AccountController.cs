@@ -73,7 +73,7 @@ namespace Compuskills.Projects.TotalTimesheetPro.Mvc.Controllers
         {
             if(model.Password != model.ConfirmPassword)
             {
-                ModelState.AddModelError("Password", "Password and confirm do not match");
+                ModelState.AddModelError("Password", "Passwords dont match");
             }
 
             if (!ModelState.IsValid)

@@ -21,6 +21,10 @@ namespace Compuskills.Projects.TotalTimesheetPro.Mvc.Controllers
         public ActionResult Index()
         {
             var temp = User.Identity.GetUserId();
+            if (db.Clients.Where(x => x.TtpUserId == temp).SingleOrDefault() == null)
+            {
+                return RedirectToAction("Client", "Redirect");
+            }
             var projects = db.Projects.Include(p => p.Client).Where(x => x.Client.TtpUserId==temp && x.IsActive==true);
             return View(projects.ToList());
         }

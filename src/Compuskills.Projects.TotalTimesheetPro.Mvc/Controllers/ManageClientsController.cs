@@ -139,6 +139,17 @@ namespace Compuskills.Projects.TotalTimesheetPro.Mvc.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.Unauthorized);
             }
+            var tse=db.TimesheetEntries.Where(x => x.Project.ClientID == client.ClientID).AsEnumerable();
+            foreach (var item in tse)
+            {
+                db.TimesheetEntries.Remove(item);
+            }
+            var projectToDelete = db.Projects.Where(x => x.ClientID == client.ClientID).AsEnumerable();
+            foreach (var item in projectToDelete)
+            {
+                db.Projects.Remove(item);
+            }
+
             db.Clients.Remove(client);
             db.SaveChanges();
             return RedirectToAction("Index");
